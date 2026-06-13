@@ -15,4 +15,16 @@ function makePetPayload(overrides = {}) {
     }
 }
 
-module.exports = { makeAuthToken, makePetPayload }
+function makeUserPayload(overrides = {}) {
+    return {
+    name: 'Maria',
+    email: `user_${Date.now()}@email.com`,
+    phone: '11999999999',
+    password: '123456',
+    confirmpassword: '123456',
+    ...overrides,
+    }
+
+}
+
+module.exports = { makeAuthToken, makePetPayload, makeUserPayload }
