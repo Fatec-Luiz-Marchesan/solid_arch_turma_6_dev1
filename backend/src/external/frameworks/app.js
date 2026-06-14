@@ -21,8 +21,11 @@ const ReportRoutes = require('../../../routers/ReportRouters')
 
 app.use('/v2/users', UserRoutesV2)
 
+const ReviewRoutes = require('../../../routers/ReviewRouters')
+
 app.use('/admins', AdminRoutes)
 app.use('/reports', ReportRoutes)
+app.use('/reviews', ReviewRoutes)
 
 app.use('/pets', PetRoutes)
 app.use('/users', UserRoutes)
