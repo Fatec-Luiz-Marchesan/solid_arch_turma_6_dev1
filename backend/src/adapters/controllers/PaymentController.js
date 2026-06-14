@@ -3,11 +3,12 @@ const { CreatePayment } = require('../../use-cases/CreatePayment')
 const { PaymentMongoRepository } = require('../../external/repositories/PaymentMongoRepository')
 const { ProcessPayment } = require('../../use-cases/ProcessPayment')
 const { FakePaymentGateway } = require('../../external/adapters/FakePaymentGateway')
+const { sanitizePayment } = require('../validators/sanitizePayment')
 
 module.exports = class PaymentController {
  
   static async create(req, res) {
-    const { payer, amount, currency } = req.body
+     const { payer, amount, currency } = sanitizePayment(req.body)
 
     const repository = new PaymentMongoRepository()
     const createPayment = new CreatePayment(repository)
