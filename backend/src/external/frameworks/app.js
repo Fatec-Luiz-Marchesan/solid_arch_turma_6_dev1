@@ -14,9 +14,12 @@ const UserRoutesV2 = require('../../../routers/UserRoutersV2')
 const LocationRoutes = require('../../../routers/LocationRouters')
 const PaymentRoutes = require('../../../routers/PaymentRouters')
 const DietRoutes = require('../../../routers/DietRouters')
+const BreedRoutes = require('../../../routers/BreedRouters')
 
 app.use('/diets', DietRoutes)
 const AuthRoutes = require('../../../routers/Authrouters')
+
+app.use('/breeds', BreedRoutes)
 
 app.use('/auth', AuthRoutes)
 
