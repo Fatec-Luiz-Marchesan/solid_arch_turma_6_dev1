@@ -25,7 +25,9 @@
     "nodemon": "^2.0.12"
   },
   "devDependencies": {
+    "cross": "^1.0.0",
     "cross-env": "^10.1.0",
+    "env": "^0.0.2",
     "jest": "^30.4.2",
     "mongodb-memory-server": "^11.2.0",
     "supertest": "^7.2.2"
