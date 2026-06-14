@@ -3,6 +3,7 @@ const { CreateAdmin } = require('../../use-cases/CreateAdmin')
 const { AdminMongoRepository } = require('../../external/repositories/AdminMongoRepository')
 const { BcryptHasher } = require('../../external/adapters/BcryptHasher')
 const { AdminValidator } = require('../validators/AdminValidator')
+const { ListAdmins } = require('../../use-cases/ListAdmins')
 
 // Mapa de mensagens de domínio → status HTTP (Open/Closed para novos erros)
 const ERROR_STATUS_MAP = {
@@ -51,6 +52,17 @@ module.exports = class AdminController {
       return res.status(200).json({ admins })
     } catch (error) {
       return res.status(500).json({ message: 'Erro interno ao listar admins.' })
+    }
+  }
+    static async list(req, res) {
+    const adminRepository = new AdminMongoRepository()
+    const listAdmins = new ListAdmins(adminRepository)
+
+    try {
+      const admins = await listAdmins.execute()
+      return res.status(200).json({ admins })
+    } catch (error) {
+      return res.status(500).json({ message: error.message })
     }
   }
 }
