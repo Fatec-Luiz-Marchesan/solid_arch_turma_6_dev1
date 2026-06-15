@@ -1,9 +1,12 @@
+const VALID_ROLES = ['admin', 'super-admin', 'moderator']
+
 class AdminValidator {
   static validateCreate(body) {
     if (!body || typeof body !== 'object') {
       return 'Corpo da requisição inválido!'
     }
-    const { email, password } = body
+
+    const { email, password, role } = body
 
     if (email !== undefined && typeof email !== 'string') {
       return 'O email deve ser um texto!'
@@ -11,8 +14,11 @@ class AdminValidator {
     if (password !== undefined && typeof password !== 'string') {
       return 'A senha deve ser um texto!'
     }
+    if (role !== undefined && !VALID_ROLES.includes(role)) {
+      return 'Role inválida!'
+    }
     return null
   }
 }
 
-module.exports = { AdminValidator }
+module.exports = { AdminValidator, VALID_ROLES }

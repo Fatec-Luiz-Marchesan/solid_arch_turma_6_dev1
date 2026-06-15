@@ -54,4 +54,20 @@ describe('Contrato da API de Admin (integração)', () => {
     expect(res.body.admins).toHaveLength(1)
     expect(res.body.admins[0].password).toBeUndefined()
   })
+
+  it('POST /admins/create com role inválida deve retornar 422', async () => {
+    const res = await request(app)
+      .post('/admins/create')
+      .send({ ...validAdmin, role: 'hacker' })
+    expect(res.status).toBe(422)
+    expect(res.body.message).toBe('Role inválida!')
+  })
+
+  it('POST /admins/create com role válida deve retornar 201', async () => {
+    const res = await request(app)
+      .post('/admins/create')
+      .send({ name: 'Super', email: 'super@admin.com', password: '123456', role: 'super-admin' })
+    expect(res.status).toBe(201)
+    expect(res.body.admin.role).toBe('super-admin')
+  })
 })

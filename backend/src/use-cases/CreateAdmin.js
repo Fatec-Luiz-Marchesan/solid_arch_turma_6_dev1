@@ -7,9 +7,9 @@ class CreateAdmin {
     this.hasher = hasher
   }
 
-  async execute({ name, email, password }) {
+  async execute({ name, email, password, role }) {
     
-    const admin = new Admin({ name, email, password })
+    const admin = new Admin({ name, email, password, role })
 
     
     const alreadyExists = await this.adminRepository.findByEmail(admin.email)
