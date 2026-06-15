@@ -1,3 +1,5 @@
+const sanitizeHtml = require('sanitize-html')
+
 class InputSanitizer {
     static sanitize(payload) {
     if (!payload || typeof payload !== 'object') {
@@ -8,16 +10,10 @@ class InputSanitizer {
     for (const key of Object.keys(payload)) {
       const value = payload[key]
       if (typeof value === 'string') {
-        let sanitized = value
-         let previous
-         do {
-           previous = sanitized
-           sanitized = sanitized
-            
-             .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, '')
-            
-             .replace(/<[^>]*>/g, '')
-         } while (sanitized !== previous)
+       const sanitized = sanitizeHtml(value, {
+           allowedTags: [],
+           allowedAttributes: {}
+         })
          result[key] = sanitized.trim()
       } else {
         result[key] = value
