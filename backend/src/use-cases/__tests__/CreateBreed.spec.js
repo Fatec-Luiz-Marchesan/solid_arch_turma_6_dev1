@@ -8,6 +8,7 @@ describe('CreateBreed Use Case', () => {
       name: breed.name,
       species: breed.species,
       description: breed.description,
+      size: breed.size,
     })),
   })
 
@@ -21,6 +22,7 @@ describe('CreateBreed Use Case', () => {
     name: 'Labrador',
     species: 'dog',
     description: 'Cão dócil e brincalhão',
+    size: 'large',
   }
 
   it('deve lançar erro se o nome não for informado', async () => {
@@ -70,5 +72,25 @@ describe('CreateBreed Use Case', () => {
     const result = await sut.execute({ ...validInput, description: undefined })
     expect(result).toHaveProperty('id')
     expect(result.name).toBe('Labrador')
+  })
+
+  it('deve lançar erro se o porte (size) for inválido', async () => {
+    const { sut } = makeSut()
+    await expect(sut.execute({ ...validInput, size: 'gigante' }))
+      .rejects.toThrow('Porte inválido!')
+  })
+
+  it('deve aceitar os portes válidos (small, medium, large)', async () => {
+    const { sut } = makeSut()
+    for (const size of ['small', 'medium', 'large']) {
+      const result = await sut.execute({ ...validInput, name: `Raça ${size}`, size })
+      expect(result.size).toBe(size)
+    }
+  })
+
+  it('deve assumir porte "medium" por padrão quando size não é informado', async () => {
+    const { sut } = makeSut()
+    const result = await sut.execute({ ...validInput, size: undefined })
+    expect(result.size).toBe('medium')
   })
 })

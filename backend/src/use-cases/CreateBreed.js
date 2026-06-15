@@ -6,9 +6,8 @@ class CreateBreed {
     this.breedRepository = breedRepository
   }
 
-  async execute({ name, species, description }) {
-  
-    const breed = new Breed({ name, species, description })
+  async execute({ name, species, description, size }) {
+    const breed = new Breed({ name, species, description, size })
 
     const alreadyExists = await this.breedRepository.findByName(breed.name)
     if (alreadyExists) {
@@ -19,6 +18,7 @@ class CreateBreed {
       name: breed.name,
       species: breed.species,
       description: breed.description,
+      size: breed.size,
     })
 
     return created

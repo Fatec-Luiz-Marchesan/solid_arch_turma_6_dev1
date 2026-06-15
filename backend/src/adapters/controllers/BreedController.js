@@ -6,16 +6,17 @@ const ERROR_STATUS_MAP = {
   'O nome da raça é obrigatório!': 422,
   'A espécie é obrigatória!': 422,
   'Espécie inválida!': 422,
+  'Porte inválido!': 422,
 }
 
 module.exports = class BreedController {
   static async create(req, res) {
-    const { name, species, description } = req.body
+    const { name, species, description, size } = req.body
     const repository = new BreedMongoRepository()
     const createBreed = new CreateBreed(repository)
 
     try {
-      const breed = await createBreed.execute({ name, species, description })
+      const breed = await createBreed.execute({ name, species, description, size })
       return res.status(201).json({
         message: 'Raça cadastrada com sucesso!',
         breed,

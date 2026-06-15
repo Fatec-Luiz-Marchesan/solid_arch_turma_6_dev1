@@ -16,6 +16,7 @@ class BreedMongoRepository extends IBreedRepository {
       name: doc.name,
       species: doc.species,
       description: doc.description,
+      size: doc.size,
     }
   }
 
@@ -26,6 +27,7 @@ class BreedMongoRepository extends IBreedRepository {
       name: doc.name,
       species: doc.species,
       description: doc.description,
+      size: doc.size,
     }))
   }
 }

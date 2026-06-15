@@ -16,6 +16,11 @@ const breedSchema = new Schema(
       type: String,
       default: '',
     },
+    size: {
+      type: String,
+      enum: ['small', 'medium', 'large'],
+      default: 'medium',
+    },
   },
   { timestamps: true }
 )
