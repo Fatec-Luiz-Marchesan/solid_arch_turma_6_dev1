@@ -21,7 +21,7 @@ module.exports = class AdminController {
       return res.status(422).json({ message: schemaError })
     }
 
-    const { name, email, password } = req.body
+    const { name, email, password, role } = req.body
 
     // 2) Composição das dependências (Composition Root)
     const adminRepository = new AdminMongoRepository()
@@ -30,7 +30,7 @@ module.exports = class AdminController {
 
     // 3) Repassa para o Use Case e traduz erros
     try {
-      const admin = await createAdmin.execute({ name, email, password })
+      const admin = await createAdmin.execute({ name, email, password, role })
       return res.status(201).json({
         message: 'Admin cadastrado com sucesso!',
         admin,

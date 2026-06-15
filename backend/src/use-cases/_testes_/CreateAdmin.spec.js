@@ -1,7 +1,7 @@
 const { CreateAdmin } = require('../CreateAdmin')
 
 describe('CreateAdmin Use Case', () => {
-  
+
   const makeAdminRepository = () => ({
     findByEmail: jest.fn().mockResolvedValue(null),
     create: jest.fn().mockImplementation(async (admin) => ({
@@ -13,7 +13,7 @@ describe('CreateAdmin Use Case', () => {
     })),
   })
 
-  
+
   const makeHasher = () => ({
     hash: jest.fn().mockResolvedValue('hashed-password'),
   })
@@ -73,6 +73,24 @@ describe('CreateAdmin Use Case', () => {
   it('deve atribuir a role "admin" por padrão', async () => {
     const { sut, adminRepository } = makeSut()
     await sut.execute(validInput)
+
+    expect(adminRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({ role: 'admin' })
+    )
+  })
+
+  it('deve repassar a role informada para o repositório quando válida', async () => {
+    const { sut, adminRepository } = makeSut()
+    await sut.execute({ ...validInput, role: 'super-admin' })
+
+    expect(adminRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({ role: 'super-admin' })
+    )
+  })
+
+  it('deve usar a role "admin" por padrão quando role não é informada', async () => {
+    const { sut, adminRepository } = makeSut()
+    await sut.execute({ ...validInput, role: undefined })
 
     expect(adminRepository.create).toHaveBeenCalledWith(
       expect.objectContaining({ role: 'admin' })
