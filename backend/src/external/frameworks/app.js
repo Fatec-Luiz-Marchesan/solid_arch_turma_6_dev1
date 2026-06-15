@@ -34,6 +34,10 @@ app.use('/v2/users', UserRoutesV2)
 
 const ReviewRoutes = require('../../../routers/ReviewRouters')
 
+const VaccineRoutesV2 = require('../../../routers/VaccineRoutersV2')
+
+app.use('/v2/vaccines', VaccineRoutesV2)
+
 app.use('/admins', AdminRoutes)
 app.use('/reports', ReportRoutes)
 app.use('/reviews', ReviewRoutes)
