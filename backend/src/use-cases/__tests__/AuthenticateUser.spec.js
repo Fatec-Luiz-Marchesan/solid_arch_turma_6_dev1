@@ -80,4 +80,17 @@ describe('AuthenticateUser Use Case', () => {
     const result = await sut.execute(validInput)
     expect(result.password).toBeUndefined()
   })
+  
+  it('deve lançar erro se o email tiver formato inválido', async () => {
+    const { sut } = makeSut()
+    await expect(sut.execute({ ...validInput, email: 'email-sem-arroba' }))
+      .rejects.toThrow('Formato de e-mail inválido!')
+  })
+
+  it('não deve buscar usuário se o email tiver formato inválido', async () => {
+    const { sut, userRepository } = makeSut()
+    await expect(sut.execute({ ...validInput, email: 'invalido' }))
+      .rejects.toThrow('Formato de e-mail inválido!')
+    expect(userRepository.findByEmail).not.toHaveBeenCalled()
+  })
 })
