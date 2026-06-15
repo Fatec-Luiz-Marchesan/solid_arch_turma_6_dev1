@@ -3,22 +3,40 @@ const { EventMongoRepository } = require('../../external/repositories/EventMongo
 const { SystemClock } = require('../../external/adapters/SystemClock')
 
 module.exports = class EventController {
-  // POST /events/create
   static async create(req, res) {
-    const { title, startsAt, endsAt, organizerId } = req.body
+    const {
+      title,
+      startsAt,
+      endsAt,
+      organizerId,
+      location,
+      capacity,
+      status,
+    } = req.body
 
     const eventRepository = new EventMongoRepository()
     const clock = new SystemClock()
     const createEvent = new CreateEvent(eventRepository, clock)
 
     try {
-      const event = await createEvent.execute({ title, startsAt, endsAt, organizerId })
+      const event = await createEvent.execute({
+        title,
+        startsAt,
+        endsAt,
+        organizerId,
+        location,
+        capacity,
+        status,
+      })
+
       return res.status(201).json({
         message: 'Evento criado com sucesso!',
         event,
       })
     } catch (error) {
-      return res.status(422).json({ message: error.message })
+      return res.status(422).json({
+        message: error.message,
+      })
     }
   }
 }

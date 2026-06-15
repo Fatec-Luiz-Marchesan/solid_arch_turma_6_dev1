@@ -1,16 +1,30 @@
 const { Event } = require('../domain/entities/Event')
 
 class CreateEvent {
-  // Injeção de dependência via construtor (Dependency Inversion):
-  // repositório + relógio (clock) injetável para testes determinísticos.
   constructor(eventRepository, clock = { now: () => new Date() }) {
     this.eventRepository = eventRepository
     this.clock = clock
   }
 
-  async execute({ title, startsAt, endsAt, organizerId }) {
+  async execute({
+    title,
+    startsAt,
+    endsAt,
+    organizerId,
+    location,
+    capacity,
+    status,
+  }) {
     const event = new Event(
-      { title, startsAt, endsAt, organizerId },
+      {
+        title,
+        startsAt,
+        endsAt,
+        organizerId,
+        location,
+        capacity,
+        status,
+      },
       this.clock.now()
     )
 
@@ -19,6 +33,9 @@ class CreateEvent {
       startsAt: event.startsAt,
       endsAt: event.endsAt,
       organizerId: event.organizerId,
+      location: event.location,
+      capacity: event.capacity,
+      status: event.status,
     })
 
     return created
