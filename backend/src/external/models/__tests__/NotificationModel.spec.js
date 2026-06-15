@@ -27,4 +27,24 @@ describe('NotificationModel (Schema)', () => {
 
     expect(err).toBeUndefined()
   })
+
+  it('deve aceitar prioridade high', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'Urgente!',
+      priority: 'high',
+    })
+    const err = notification.validateSync()
+    expect(err).toBeUndefined()
+  })
+
+  it('deve falhar se a prioridade for inválida', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'Erro de prioridade',
+      priority: 'invalida',
+    })
+    const err = notification.validateSync()
+    expect(err.errors.priority).toBeDefined()
+  })  
 })
