@@ -7,10 +7,16 @@ class Admin {
       throw new Error('A senha deve ter no mínimo 6 caracteres!')
     }
 
+    const allowedRoles = ['admin', 'super-admin', 'moderator']
+    const finalRole = role || 'admin'
+    if (!allowedRoles.includes(finalRole)) {
+      throw new Error('Papel de admin inválido!')
+    }
+
     this.name = name
     this.email = email
     this.password = password
-    this.role = role || 'admin'
+    this.role = finalRole
   }
 }
 

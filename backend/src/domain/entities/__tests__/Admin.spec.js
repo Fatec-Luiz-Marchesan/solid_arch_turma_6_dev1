@@ -21,8 +21,8 @@ describe('Entidade Admin (regras de domínio)', () => {
   })
 
   it('deve preservar a role quando informada explicitamente', () => {
-    const admin = new Admin(makeValidData({ role: 'superadmin' }))
-    expect(admin.role).toBe('superadmin')
+    const admin = new Admin(makeValidData({ role: 'super-admin' }))
+    expect(admin.role).toBe('super-admin')
   })
 
   it('deve aceitar admin sem nome (name não é validado pela entidade)', () => {
