@@ -1,5 +1,6 @@
 const { sanitizeInput, assertMaxLength, LIMITS} = require('./helpers/SecurityInput')
 
+//Regex para validar o formato do e-mail
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 class AuthenticateUser {

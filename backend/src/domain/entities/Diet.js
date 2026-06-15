@@ -1,5 +1,3 @@
-
-
 const VALID_TYPES = ['weight-loss', 'maintenance', 'weight-gain', 'medical']
 
 class Diet {
