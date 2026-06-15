@@ -74,4 +74,27 @@ describe('EventModel (schema Mongoose)', () => {
       })
     ).rejects.toThrow()
   })
+
+  it('deve assumir category = "other" por padrão quando não informada', async () => {
+    const doc = await EventModel.create({
+      title: 'Evento sem categoria',
+      startsAt: new Date('2026-06-20T09:00:00Z'),
+      endsAt: new Date('2026-06-20T10:00:00Z'),
+      organizerId: 'user-1',
+    })
+
+    expect(doc.category).toBe('other')
+  })
+
+  it('deve rejeitar uma category fora do enum permitido', async () => {
+    await expect(
+      EventModel.create({
+        title: 'Evento categoria inválida',
+        startsAt: new Date('2026-06-20T09:00:00Z'),
+        endsAt: new Date('2026-06-20T10:00:00Z'),
+        organizerId: 'user-1',
+        category: 'festa-junina',
+      })
+    ).rejects.toThrow()
+  })
 })

@@ -14,6 +14,7 @@ class EventMongoRepository extends IEventRepository {
       location: doc.location,
       capacity: doc.capacity,
       status: doc.status,
+      category: doc.category,
     }
   }
 }

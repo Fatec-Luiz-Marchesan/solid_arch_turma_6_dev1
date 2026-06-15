@@ -14,6 +14,7 @@ class CreateEvent {
     location,
     capacity,
     status,
+    category,
   }) {
     const event = new Event(
       {
@@ -24,6 +25,7 @@ class CreateEvent {
         location,
         capacity,
         status,
+        category,
       },
       this.clock.now()
     )
@@ -36,6 +38,7 @@ class CreateEvent {
       location: event.location,
       capacity: event.capacity,
       status: event.status,
+      category: event.category,
     })
 
     return created
