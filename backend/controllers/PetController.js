@@ -1,13 +1,12 @@
 const Pet = require('../models/Pet')
 const { Pet: PetEntity } = require('../src/domain/entities/Pet')
+const { Adoption } = require('../src/domain/entities/Adoption')
 
-// helpers
 const getUserByToken = require('../helpers/get-user-by-token')
 const getToken = require('../helpers/get-token')
 const ObjectId = require('mongoose').Types.ObjectId
 
 module.exports = class PetController {
-  // create a pet
   static async create(req, res) {
     const name = req.body.name
     const age = req.body.age
@@ -17,13 +16,11 @@ module.exports = class PetController {
     const images = req.files
     const available = true
 
-    // get user
     const token = getToken(req)
     const user = await getUserByToken(token)
 
     const imageFilenames = (images || []).map((image) => image.filename)
 
-    // Validação centralizada na entidade de domínio (Single Responsibility)
     let petEntity
     try {
       petEntity = new PetEntity({
@@ -46,7 +43,6 @@ module.exports = class PetController {
       return
     }
 
-    // Persistência (camada External/Models)
     const pet = new Pet({
       name: petEntity.name,
       age: petEntity.age,
@@ -69,7 +65,6 @@ module.exports = class PetController {
     }
   }
 
-  // get all registered pets
   static async getAll(req, res) {
     const pets = await Pet.find().sort('-createdAt')
 
@@ -78,9 +73,7 @@ module.exports = class PetController {
     })
   }
 
-  // get all user pets
   static async getAllUserPets(req, res) {
-    // get user
     const token = getToken(req)
     const user = await getUserByToken(token)
 
@@ -91,9 +84,7 @@ module.exports = class PetController {
     })
   }
 
-  // get all user adoptions
   static async getAllUserAdoptions(req, res) {
-    // get user
     const token = getToken(req)
     const user = await getUserByToken(token)
 
@@ -104,17 +95,14 @@ module.exports = class PetController {
     })
   }
 
-  // get a specific pet
   static async getPetById(req, res) {
     const id = req.params.id
 
-    // check if id is valid
     if (!ObjectId.isValid(id)) {
       res.status(422).json({ message: 'ID inválido!' })
       return
     }
 
-    // check if pet exists
     const pet = await Pet.findOne({ _id: id })
 
     if (!pet) {
@@ -127,17 +115,14 @@ module.exports = class PetController {
     })
   }
 
-  // remove a pet
   static async removePetById(req, res) {
     const id = req.params.id
 
-    // check if id is valid
     if (!ObjectId.isValid(id)) {
       res.status(422).json({ message: 'ID inválido!' })
       return
     }
 
-    // check if pet exists
     const pet = await Pet.findOne({ _id: id })
 
     if (!pet) {
@@ -145,7 +130,6 @@ module.exports = class PetController {
       return
     }
 
-    // check if user registered this pet
     const token = getToken(req)
     const user = await getUserByToken(token)
 
@@ -162,7 +146,6 @@ module.exports = class PetController {
     res.status(200).json({ message: 'Pet removido com sucesso!' })
   }
 
-  // update a pet
   static async updatePet(req, res) {
     const id = req.params.id
     const name = req.body.name
@@ -175,7 +158,6 @@ module.exports = class PetController {
 
     const updateData = {}
 
-    // check if pet exists
     const pet = await Pet.findOne({ _id: id })
 
     if (!pet) {
@@ -183,7 +165,6 @@ module.exports = class PetController {
       return
     }
 
-    // check if user registered this pet
     const token = getToken(req)
     const user = await getUserByToken(token)
 
@@ -195,7 +176,6 @@ module.exports = class PetController {
       return
     }
 
-    // validations
     if (!name) {
       res.status(422).json({ message: 'O nome é obrigatório!' })
       return
@@ -248,65 +228,46 @@ module.exports = class PetController {
     res.status(200).json({ pet: pet, message: 'Pet atualizado com sucesso!' })
   }
 
-  // schedule a visit
   static async schedule(req, res) {
     const id = req.params.id
 
-    // check if pet exists
     const pet = await Pet.findOne({ _id: id })
 
-    // check if user owns this pet
     const token = getToken(req)
     const user = await getUserByToken(token)
 
-    console.log(pet)
-
-    if (pet.user._id.equals(user._id)) {
-      res.status(422).json({
-        message: 'Você não pode agendar uma visita com seu próprio Pet!',
-      })
+    const adoption = new Adoption(pet)
+    try {
+      adoption.schedule(user)
+    } catch (error) {
+      res.status(422).json({ message: error.message })
       return
     }
 
-    // check if user has already adopted this pet
-    if (pet.adopter) {
-      if (pet.adopter._id.equals(user._id)) {
-        res.status(422).json({
-          message: 'Você já agendou uma visita para este Pet!',
-        })
-        return
-      }
-    }
-
-    // add user to pet
-    pet.adopter = {
-      _id: user._id,
-      name: user.name,
-      image: user.image,
-    }
-
-    console.log(pet)
-
-    await Pet.findByIdAndUpdate(pet._id, pet)
+    await Pet.findByIdAndUpdate(pet._id, adoption.pet)
 
     res.status(200).json({
       message: `A visita foi agendada com sucesso, entre em contato com ${pet.user.name} no telefone: ${pet.user.phone}`,
     })
   }
 
-  // conclude a pet adoption
   static async concludeAdoption(req, res) {
     const id = req.params.id
 
-    // check if pet exists
     const pet = await Pet.findOne({ _id: id })
 
-    pet.available = false
+    const adoption = new Adoption(pet)
+    try {
+      adoption.conclude()
+    } catch (error) {
+      res.status(422).json({ message: error.message })
+      return
+    }
 
-    await Pet.findByIdAndUpdate(pet._id, pet)
+    await Pet.findByIdAndUpdate(pet._id, adoption.pet)
 
     res.status(200).json({
-      pet: pet,
+      pet: adoption.pet,
       message: `Parabéns! O ciclo de adoção foi finalizado com sucesso!`,
     })
   }
