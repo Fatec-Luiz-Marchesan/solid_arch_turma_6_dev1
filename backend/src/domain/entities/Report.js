@@ -1,4 +1,6 @@
 const { sanitizeText, assertMaxLength, LIMITS } = require('./helpers/analytics-input')
+const { resolvePriority } = require('./helpers/report-priority')
+
 const VALID_TYPES = ['abuse', 'spam', 'fraud', 'other']
 
 
@@ -28,6 +30,7 @@ class Report {
     this.description = description
     this.type = type
     this.status = status || 'open'
+    this.priority = resolvePriority(type)
     this.reporterId = reporterId
   }
 }
