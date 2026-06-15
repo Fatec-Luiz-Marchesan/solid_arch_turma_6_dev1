@@ -16,6 +16,7 @@ const DietModel = mongoose.model(
       dailyCalories: {
         type: Number,
         required: true,
+        min: [1, 'As calorias diárias devem ser maiores que zero!'],
       },
       type: {
         type: String,
