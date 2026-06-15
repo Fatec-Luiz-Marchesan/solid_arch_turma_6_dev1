@@ -9,6 +9,7 @@ describe('CreateReport Use Case', () => {
       description: report.description,
       type: report.type,
       status: report.status,
+      priority: report.priority,
       reporterId: report.reporterId,
     })),
   })
@@ -66,5 +67,40 @@ describe('CreateReport Use Case', () => {
     expect(result).toHaveProperty('id')
     expect(result.title).toBe('Anúncio suspeito')
     expect(result.status).toBe('open')
+  })
+
+  it('deve definir priority "high" para reports do tipo fraud', async () =>{
+    const { sut, reportRepository } = makeSut()
+    await sut.execute({...validInput, type: 'fraud'})
+
+    expect(reportRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({priority: 'high'})
+    )
+  })
+
+  it('deve definir priority "high" para reports do tipo abuse', async () => {
+    const { sut, reportRepository } = makeSut()
+    await sut.execute({ ...validInput, type: 'abuse' })
+    expect(reportRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({ priority: 'high' })
+    )
+  })
+
+
+  it('deve definir priority "medium" para reports do tipo spam', async () =>{
+    const { sut, reportRepository } = makeSut()
+    await sut.execute({...validInput, type: 'spam'})
+
+    expect(reportRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({priority: 'medium'})
+    )
+  })
+
+  it('deve definir priority "low" para reports do tipo other', async () =>{
+    const { sut, reportRepository }= makeSut()
+    await sut.execute({...validInput, type: 'other'})
+    expect(reportRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({ priority: 'low'})
+    )
   })
 })
