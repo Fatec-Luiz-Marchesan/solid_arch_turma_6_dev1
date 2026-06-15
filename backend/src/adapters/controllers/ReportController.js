@@ -1,9 +1,14 @@
 const { CreateReport } = require('../../use-cases/CreateReport')
 const { ReportMongoRepository } = require('../../external/repositories/ReportMongoRepository')
+const { ReportValidator } = require('../validators/ReportValidator')
 
 module.exports = class ReportController {
- 
+
   static async create(req, res) {
+    const schemaError = ReportValidator.validateCreate(req.body)
+    if (schemaError) {
+      return res.status(422).json({ message: schemaError })
+    }
     const { title, description, type, reporterId } = req.body
 
     const reportRepository = new ReportMongoRepository()

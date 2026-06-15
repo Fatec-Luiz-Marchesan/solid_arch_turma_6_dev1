@@ -67,4 +67,13 @@ describe('CreateReport Use Case', () => {
     expect(result.title).toBe('Anúncio suspeito')
     expect(result.status).toBe('open')
   })
+
+  it('deve repassar o type informado ao repositório', async () => {
+    const { sut, reportRepository } = makeSut()
+    await sut.execute({ ...validInput, type: 'fraud' })
+
+    expect(reportRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({ type: 'fraud' })
+    )
+  })
 })
