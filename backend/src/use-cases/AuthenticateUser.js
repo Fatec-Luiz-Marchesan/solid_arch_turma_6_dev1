@@ -1,5 +1,7 @@
 const { sanitizeInput, assertMaxLength, LIMITS} = require('./helpers/SecurityInput')
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 class AuthenticateUser {
 
   constructor(userRepository, hashComparer, tokenGenerator) {
@@ -17,6 +19,9 @@ class AuthenticateUser {
 
     if (!email) {
       throw new Error('O e-mail é obrigatório!')
+    }
+    if (!EMAIL_REGEX.test(email)) {
+      throw new Error('Formato de e-mail inválido!')
     }
     if (!password) {
       throw new Error('A senha é obrigatória!')
