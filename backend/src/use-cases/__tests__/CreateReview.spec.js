@@ -1,7 +1,6 @@
 const { CreateReview } = require('../CreateReview')
 
 describe('CreateReview Use Case', () => {
-
   const makeReviewRepository = () => ({
     create: jest.fn().mockImplementation(async (review) => ({
       id: 'review-id',
@@ -12,13 +11,22 @@ describe('CreateReview Use Case', () => {
     })),
   })
 
+  const makeSut = () => {
+    const reviewRepository = makeReviewRepository()
+    const sut = new CreateReview(reviewRepository)
+
+    return {
+      sut,
+      reviewRepository,
+    }
+  }
+
   const validInput = {
     rating: 5,
     comment: 'Pet maravilhoso, adoção tranquila!',
     petId: 'pet-1',
     authorId: 'user-1',
   }
-
 
   it('deve lançar erro se a nota não for informada', async () => {
     const { sut } = makeSut()
@@ -36,6 +44,7 @@ describe('CreateReview Use Case', () => {
     const { sut } = makeSut()
     await expect(sut.execute({ ...validInput, rating: 6 }))
       .rejects.toThrow('A nota deve estar entre 1 e 5!')
+
     await expect(sut.execute({ ...validInput, rating: 0 }))
       .rejects.toThrow('A nota deve estar entre 1 e 5!')
   })

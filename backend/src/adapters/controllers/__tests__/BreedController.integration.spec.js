@@ -6,6 +6,7 @@ describe('Contrato da API de Breed (integração)', () => {
     name: 'Labrador',
     species: 'dog',
     description: 'Cão dócil e brincalhão',
+    size: 'large',
   }
 
   it('POST /breeds/create deve criar uma raça e retornar 201', async () => {
@@ -15,6 +16,7 @@ describe('Contrato da API de Breed (integração)', () => {
     expect(res.body).toHaveProperty('breed')
     expect(res.body.breed.name).toBe('Labrador')
     expect(res.body.breed.species).toBe('dog')
+    expect(res.body.breed.size).toBe('large')
     expect(res.body.breed).toHaveProperty('id')
   })
 
@@ -45,6 +47,15 @@ describe('Contrato da API de Breed (integração)', () => {
     expect(res.body.message).toBe('Espécie inválida!')
   })
 
+  it('POST /breeds/create com porte inválido deve retornar 422', async () => {
+    const res = await request(app)
+      .post('/breeds/create')
+      .send({ name: 'Raça X', species: 'dog', size: 'gigante' })
+
+    expect(res.status).toBe(422)
+    expect(res.body.message).toBe('Porte inválido!')
+  })
+
   it('POST /breeds/create com nome duplicado deve retornar 409', async () => {
     await request(app).post('/breeds/create').send(validBreed)
     const res = await request(app).post('/breeds/create').send(validBreed)
@@ -62,5 +73,6 @@ describe('Contrato da API de Breed (integração)', () => {
     expect(Array.isArray(res.body.breeds)).toBe(true)
     expect(res.body.breeds).toHaveLength(1)
     expect(res.body.breeds[0].name).toBe('Labrador')
+    expect(res.body.breeds[0].size).toBe('large')
   })
 })

@@ -22,7 +22,8 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^6.0.6",
     "multer": "^2.1.1",
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.12",
+    "sanitize-html": "^2.17.5"
   },
   "devDependencies": {
     "cross": "^1.0.0",
