@@ -1,4 +1,3 @@
-
 const mongoose = require('../../../db/conn')
 const { Schema } = mongoose
 
@@ -22,6 +21,11 @@ const DietModel = mongoose.model(
         type: String,
         enum: ['weight-loss', 'maintenance', 'weight-gain', 'medical'],
         default: 'maintenance',
+      },
+      mealsPerDay: {
+        type: Number,
+        default: 2,
+        min: [1, 'O número de refeições por dia deve ser no mínimo 1!'],
       },
     },
     { timestamps: true }

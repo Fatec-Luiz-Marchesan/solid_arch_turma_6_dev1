@@ -1,4 +1,3 @@
-
 const { CreateDiet } = require('../CreateDiet')
 
 describe('CreateDiet Use Case', () => {
@@ -9,6 +8,7 @@ describe('CreateDiet Use Case', () => {
       pet: data.pet,
       dailyCalories: data.dailyCalories,
       type: data.type,
+      mealsPerDay: data.mealsPerDay,
     })),
   })
 
@@ -23,6 +23,7 @@ describe('CreateDiet Use Case', () => {
     pet: 'pet-id',
     dailyCalories: 350,
     type: 'weight-loss',
+    mealsPerDay: 3,
   }
 
   it('deve lançar erro de validação vindo da entidade (calorias inválidas)', async () => {
@@ -40,6 +41,7 @@ describe('CreateDiet Use Case', () => {
       pet: 'pet-id',
       dailyCalories: 350,
       type: 'weight-loss',
+      mealsPerDay: 3,
     })
   })
 
@@ -49,5 +51,23 @@ describe('CreateDiet Use Case', () => {
 
     expect(result).toHaveProperty('id', 'diet-id')
     expect(result.name).toBe('Dieta de emagrecimento')
+  })
+
+  it('deve lançar erro se mealsPerDay não for um número inteiro', async () => {
+    const { sut } = makeSut()
+    await expect(sut.execute({ ...validInput, mealsPerDay: 2.5 }))
+      .rejects.toThrow('O número de refeições por dia deve ser um inteiro!')
+  })
+
+  it('deve lançar erro se mealsPerDay for menor que 1', async () => {
+    const { sut } = makeSut()
+    await expect(sut.execute({ ...validInput, mealsPerDay: 0 }))
+      .rejects.toThrow('O número de refeições por dia deve ser no mínimo 1!')
+  })
+
+  it('deve assumir mealsPerDay = 2 por padrão quando não informado', async () => {
+    const { sut } = makeSut()
+    const result = await sut.execute({ ...validInput, mealsPerDay: undefined })
+    expect(result.mealsPerDay).toBe(2)
   })
 })

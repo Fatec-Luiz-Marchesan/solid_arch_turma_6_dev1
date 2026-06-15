@@ -1,4 +1,3 @@
-
 const { IDietRepository } = require('../../domain/repositories/IDietRepository')
 const DietModel = require('../models/DietModel')
 
@@ -11,6 +10,7 @@ class DietMongoRepository extends IDietRepository {
       pet: doc.pet,
       dailyCalories: doc.dailyCalories,
       type: doc.type,
+      mealsPerDay: doc.mealsPerDay,
     }
   }
 
@@ -22,6 +22,7 @@ class DietMongoRepository extends IDietRepository {
       pet: doc.pet,
       dailyCalories: doc.dailyCalories,
       type: doc.type,
+      mealsPerDay: doc.mealsPerDay,
     }))
   }
 }
