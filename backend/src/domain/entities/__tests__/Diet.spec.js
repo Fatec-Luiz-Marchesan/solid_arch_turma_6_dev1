@@ -47,4 +47,19 @@ describe('Entidade Diet (regras de negócio)', () => {
     const diet = new Diet(makeValid({ type: undefined }))
     expect(diet.type).toBe('maintenance')
   })
+
+  it('deve assumir mealsPerDay = 2 por padrão quando não informado', () => {
+    const diet = new Diet(makeValid({ mealsPerDay: undefined }))
+    expect(diet.mealsPerDay).toBe(2)
+  })
+
+  it('deve lançar erro se mealsPerDay não for inteiro', () => {
+    expect(() => new Diet(makeValid({ mealsPerDay: 2.5 })))
+      .toThrow('O número de refeições por dia deve ser um inteiro!')
+  })
+
+  it('deve lançar erro se mealsPerDay for menor que 1', () => {
+    expect(() => new Diet(makeValid({ mealsPerDay: 0 })))
+      .toThrow('O número de refeições por dia deve ser no mínimo 1!')
+  })
 })
