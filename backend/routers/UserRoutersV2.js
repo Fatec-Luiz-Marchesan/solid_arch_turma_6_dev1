@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const UserController = require('../src/adapters/controllers/UserController')
-const { sanitizePayload } = require('../src/adapters/middlewares/sanitizePayload')
+const { sanitizePayload } = require('../src/adapter/middlewares/sanitizePayload')
 
 const REGISTER_FIELDS = ['name', 'email', 'phone', 'password', 'confirmpassword']
 

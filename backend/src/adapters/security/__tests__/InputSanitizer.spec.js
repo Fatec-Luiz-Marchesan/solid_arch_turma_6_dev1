@@ -21,7 +21,7 @@ describe('InputSanitizer (aprimoramento de segurança)', () => {
       phone: '11999999999',
       password: '123456',
       confirmpassword: '123456',
-      isAdmin: true, // campo malicioso tentando escalar privilégio
+      isAdmin: true, 
       role: 'superuser',
     }
     const output = InputSanitizer.pick(input, [

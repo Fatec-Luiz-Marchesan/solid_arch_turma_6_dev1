@@ -8,12 +8,17 @@ class InputSanitizer {
     for (const key of Object.keys(payload)) {
       const value = payload[key]
       if (typeof value === 'string') {
-        result[key] = value
-          // remove blocos perigosos junto com seu conteúdo (script/style)
-          .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, '')
-          // remove quaisquer tags remanescentes, preservando o texto legítimo
-          .replace(/<[^>]*>/g, '')
-          .trim()
+        let sanitized = value
+         let previous
+         do {
+           previous = sanitized
+           sanitized = sanitized
+            
+             .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/gi, '')
+            
+             .replace(/<[^>]*>/g, '')
+         } while (sanitized !== previous)
+         result[key] = sanitized.trim()
       } else {
         result[key] = value
       }

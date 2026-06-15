@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const ReviewController = require('../src/adapter/controllers/ReviewController')
+const ReviewController = require('../src/adapters/controllers/ReviewController')
 
 router.post('/create', ReviewController.create)
 router.get('/', ReviewController.getAll)
