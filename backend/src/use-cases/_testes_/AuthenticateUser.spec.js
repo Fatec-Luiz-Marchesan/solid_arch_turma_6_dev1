@@ -1,7 +1,7 @@
 const { AuthenticateUser } = require('../AuthenticateUser')
+const { LIMITS, } = require('../helpers/SecurityInput')
 
 describe('AuthenticateUser Use Case', () => {
-  // Mock do repositório de usuário (porta)
   const makeUserRepository = () => ({
     findByEmail: jest.fn().mockResolvedValue({
       id: 'user-1',
@@ -11,12 +11,10 @@ describe('AuthenticateUser Use Case', () => {
     }),
   })
 
-  // Mock do comparador de senha (porta)
   const makeHashComparer = () => ({
     compare: jest.fn().mockResolvedValue(true),
   })
 
-  // Mock do gerador de token (porta)
   const makeTokenGenerator = () => ({
     generate: jest.fn().mockReturnValue('valid-token'),
   })

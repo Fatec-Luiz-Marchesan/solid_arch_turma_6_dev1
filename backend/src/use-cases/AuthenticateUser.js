@@ -1,3 +1,5 @@
+const { sanitizeInput, assertMaxLength, LIMITS} = require('./helpers/SecurityInput')
+
 class AuthenticateUser {
 
   constructor(userRepository, hashComparer, tokenGenerator) {
@@ -7,6 +9,11 @@ class AuthenticateUser {
   }
 
   async execute({ email, password }) {
+
+    assertMaxLength(email, LIMITS.EMAIL_MAX, 'E-mail')
+    assertMaxLength(password, LIMITS.PASSWORD_MAX, 'Senha')
+
+    email = sanitizeInput(email)
 
     if (!email) {
       throw new Error('O e-mail é obrigatório!')
