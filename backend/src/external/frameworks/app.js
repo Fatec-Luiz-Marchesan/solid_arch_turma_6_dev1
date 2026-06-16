@@ -16,11 +16,10 @@ const PaymentRoutes = require('../../../routers/PaymentRouters')
 const DietRoutes = require('../../../routers/DietRouters')
 const EventRoutes = require('../../../routers/EventRouters')
 const BreedRoutes = require('../../../routers/BreedRouters')
-const AdoptionRoutes = require('../../../routers/AdoptionRouters')
 
 app.use('/events', EventRoutes)
 app.use('/diets', DietRoutes)
-const AuthRoutes = require('../../../routers/Authrouters')
+const AuthRoutes = require('../../../routers/AuthRouters')
 
 app.use('/breeds', BreedRoutes)
 
@@ -42,7 +41,6 @@ app.use('/v2/vaccines', VaccineRoutesV2)
 app.use('/admins', AdminRoutes)
 app.use('/reports', ReportRoutes)
 app.use('/reviews', ReviewRoutes)
-app.use('/adoptions', AdoptionRoutes)
 
 const SettingsRoutes = require('../../../routers/SettingsRouters')
 const { Adoption } = require('../../domain/entities/Adoption')
