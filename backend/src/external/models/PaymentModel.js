@@ -1,4 +1,3 @@
-
 const mongoose = require('../../../db/conn')
 const { Schema } = mongoose
 
@@ -13,6 +12,7 @@ const PaymentModel = mongoose.model(
       amount: {
         type: Number,
         required: true,
+        min: [0.01, 'O valor do pagamento deve ser maior que zero!'],
       },
       currency: {
         type: String,
