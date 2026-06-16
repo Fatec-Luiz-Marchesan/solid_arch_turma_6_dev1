@@ -1,3 +1,4 @@
+const { requiresVetApproval } = require('../../domain/entities/helpers/diet-approval')
 const { CreateDiet } = require('../CreateDiet')
 
 describe('CreateDiet Use Case', () => {
@@ -8,6 +9,7 @@ describe('CreateDiet Use Case', () => {
       pet: data.pet,
       dailyCalories: data.dailyCalories,
       type: data.type,
+      requiresVetApproval: data.requiresVetApproval,
       mealsPerDay: data.mealsPerDay,
     })),
   })
@@ -41,8 +43,52 @@ describe('CreateDiet Use Case', () => {
       pet: 'pet-id',
       dailyCalories: 350,
       type: 'weight-loss',
+      requiresVetApproval: false,
       mealsPerDay: 3,
     })
+  })
+  it('deve exigir aprovação veterinária para dietas do tipo medical', async () => {
+    const {sut, dietRepository} = makeSut()
+    await sut.execute({...validInput, type: 'medical'})
+
+    expect(dietRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({requiresVetApproval: true})
+    )
+  })
+
+  it('deve exigir aprovação veterinária quando as calorias estão abaixo da faixa segura', async () => {
+    const {sut, dietRepository} = makeSut()
+    await sut.execute({...validInput, dailyCalories: 100})
+
+    expect(dietRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({requiresVetApproval: true})
+    )
+  })
+
+  it('deve exigir aprovação veterinária quando as calorias estão acima da faixa segura', async () =>{
+    const {sut, dietRepository} = makeSut()
+    await sut.execute({...validInput, dailyCalories: 1500})
+
+    expect(dietRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({requiresVetApproval: true})
+    )
+  })
+
+  it('não deve exigit aprovação veterinária para dietas com uns dentro da faixa segura', async () =>{
+    const {sut, dietRepository} = makeSut()
+    await sut.execute({...validInput, type: 'maintenance', dailyCalories: 400})
+
+    expect(dietRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({requiresVetApproval: false})
+    )
+  })
+
+  it('deve retornar a dieta criada com id', async () => {
+    const {sut} = makeSut()
+    const result = await sut.execute(validInput)
+
+    expect(result).toHaveProperty('id', 'diet-id')
+    expect(result.name).toBe('Dieta de emagrecimento')
   })
 
   it('deve retornar a dieta criada com id', async () => {

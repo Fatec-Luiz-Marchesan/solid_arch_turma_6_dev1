@@ -1,4 +1,5 @@
 const { Diet } = require('../domain/entities/Diet')
+const { requiresVetApproval } = require('../domain/entities/helpers/diet-approval')
 
 class CreateDiet {
   constructor(dietRepository) {
@@ -13,6 +14,7 @@ class CreateDiet {
       pet: diet.pet,
       dailyCalories: diet.dailyCalories,
       type: diet.type,
+      requiresVetApproval: diet.requiresVetApproval,
       mealsPerDay: diet.mealsPerDay,
     })
 

@@ -28,6 +28,10 @@ const DietModel = mongoose.model(
         default: 2,
         min: [1, 'O número de refeições por dia deve ser no mínimo 1!'],
       },
+      requiresVetApproval: {
+        type: Boolean,
+        default: false,
+      },
     },
     { timestamps: true }
   )
