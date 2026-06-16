@@ -19,7 +19,7 @@ const BreedRoutes = require('../../../routers/BreedRouters')
 
 app.use('/events', EventRoutes)
 app.use('/diets', DietRoutes)
-const AuthRoutes = require('../../../routers/Authrouters')
+const AuthRoutes = require('../../../routers/AuthRouters')
 
 app.use('/breeds', BreedRoutes)
 
@@ -43,6 +43,7 @@ app.use('/reports', ReportRoutes)
 app.use('/reviews', ReviewRoutes)
 
 const SettingsRoutes = require('../../../routers/SettingsRouters')
+const { Adoption } = require('../../domain/entities/Adoption')
 app.use('/settings', SettingsRoutes)
 
 app.use('/pets', PetRoutes)
