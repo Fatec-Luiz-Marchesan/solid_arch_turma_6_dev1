@@ -42,6 +42,9 @@ app.use('/admins', AdminRoutes)
 app.use('/reports', ReportRoutes)
 app.use('/reviews', ReviewRoutes)
 
+const SettingsRoutes = require('../../../routers/SettingsRouters')
+app.use('/settings', SettingsRoutes)
+
 app.use('/pets', PetRoutes)
 app.use('/users', UserRoutes)
 
