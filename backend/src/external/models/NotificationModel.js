@@ -1,4 +1,3 @@
-
 const mongoose = require('../../../db/conn')
 const { Schema } = mongoose
 
@@ -13,6 +12,7 @@ const NotificationModel = mongoose.model(
       message: {
         type: String,
         required: true,
+        maxlength: [500, 'A mensagem da notificação é muito longa!'],
       },
       priority: {
         type: String,
