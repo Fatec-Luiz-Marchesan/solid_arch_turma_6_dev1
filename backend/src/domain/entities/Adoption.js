@@ -16,7 +16,7 @@ class Adoption {
     const visitorId = visitor._id || visitor.id
 
     if (this.sameId(ownerId, visitorId)) {
-      throw new Error('O dono não pode agendar visita para o próprio pet!')
+      throw new Error('Você não pode agendar uma visita com seu próprio Pet!')
     }
 
     const currentAdopterId =
@@ -25,7 +25,7 @@ class Adoption {
       this.pet.adopter
 
     if (currentAdopterId && this.sameId(currentAdopterId, visitorId)) {
-      throw new Error('Você já agendou uma visita para este pet!')
+      throw new Error('Você já agendou uma visita para este Pet!')
     }
 
     this.pet.adopter = {
@@ -39,7 +39,7 @@ class Adoption {
 
   conclude() {
     if (!this.pet.adopter) {
-      throw new Error('Não é possível concluir uma adoção sem adotante agendado!')
+      throw new Error('Não é possível concluir uma adoção sem um adotante!')
     }
 
     this.pet.available = false
@@ -62,4 +62,4 @@ class Adoption {
   }
 }
 
-module.exports = Adoption
+module.exports = { Adoption }
