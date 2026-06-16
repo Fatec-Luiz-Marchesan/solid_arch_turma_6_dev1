@@ -3,7 +3,7 @@ const User = require('../../../models/User')
 
 class UserMongoRepository extends IUserRepository {
   async findByEmail(email) {
-     const doc = await User.findOne({ email: { $eq: email } })
+    const doc = await User.findOne({ email: { $eq: email } })
     if (!doc) return null
 
     return {
@@ -17,6 +17,17 @@ class UserMongoRepository extends IUserRepository {
 
   async create(userData) {
     const doc = await User.create(userData)
+    return {
+      id: doc._id.toString(),
+      name: doc.name,
+      email: doc.email,
+      phone: doc.phone,
+    }
+  }
+
+  async findById(id) {
+    const doc = await User.findById(id).select('-password')
+    if (!doc) return null
     return {
       id: doc._id.toString(),
       name: doc.name,
