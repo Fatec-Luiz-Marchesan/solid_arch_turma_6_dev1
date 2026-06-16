@@ -63,4 +63,16 @@ describe('Contrato POST /v2/users/profile (integração)', () => {
     expect(res.status).toBe(409)
     expect(res.body.message).toBe('Este usuario ja possui um profile!')
   })
+
+  it('deve retornar 422 quando o telefone tem menos de 10 dígitos', async () => {
+    const { userId, token } = await createUserAndToken()
+
+    const res = await request(app)
+      .post('/v2/users/profile')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ user: userId, bio: 'Amo animais', phone: '123456789' })
+
+    expect(res.status).toBe(422)
+    expect(res.body.message).toBe('O telefone deve ter no mínimo 10 dígitos!')
+  })
 })
