@@ -19,6 +19,14 @@ const NotificationModel = mongoose.model(
         enum: ['low', 'normal', 'high'],
         default: 'normal',
       },
+      type: {
+        type: String,
+        enum: {
+          values: ['system', 'promo', 'alert'],
+          message: 'Tipo de notificação inválido!',
+        },
+        default: 'system',
+      },
       read: {
         type: Boolean,
         default: false,

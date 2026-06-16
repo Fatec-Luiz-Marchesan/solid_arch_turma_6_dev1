@@ -65,4 +65,33 @@ describe('NotificationModel (Schema)', () => {
     const err = notification.validateSync()
     expect(err.errors.message).toBeDefined()
   })
+
+  it('deve assumir type "system" por padrão', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'Olá!',
+    })
+    expect(notification.type).toBe('system')
+  })
+
+  it('deve aceitar um type válido do enum', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'Promoção!',
+      type: 'promo',
+    })
+    const err = notification.validateSync()
+    expect(err).toBeUndefined()
+    expect(notification.type).toBe('promo')
+  })
+
+  it('deve falhar se o type for inválido', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'Tipo errado',
+      type: 'spam',
+    })
+    const err = notification.validateSync()
+    expect(err.errors.type).toBeDefined()
+  })
 })

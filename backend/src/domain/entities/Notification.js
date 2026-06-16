@@ -1,8 +1,9 @@
 const VALID_PRIORITIES = ['low', 'normal', 'high']
+const VALID_TYPES = ['system', 'promo', 'alert']
 const MAX_MESSAGE_LENGTH = 500
 
 class Notification {
-    constructor({ recipientId, message, priority, read, expiresAt }) {
+    constructor({ recipientId, message, priority, type, read, expiresAt }) {
         if (!recipientId) {
             throw new Error('O destinatário da notificação é obrigatório!')
         }
@@ -18,9 +19,15 @@ class Notification {
             throw new Error ('Prioridade inválida!')
         }
 
+        const finalType = type || 'system'
+        if (!VALID_TYPES.includes(finalType)) {
+            throw new Error('Tipo de notificação inválido!')
+        }
+
         this.recipientId = recipientId
         this.message = message
         this.priority = finalPriority
+        this.type = finalType
         this.read = read || false
         this.expiresAt = expiresAt || null
     }
@@ -38,4 +45,4 @@ class Notification {
     }
 }
 
-module.exports = { Notification, VALID_PRIORITIES, MAX_MESSAGE_LENGTH }
+module.exports = { Notification, VALID_PRIORITIES, VALID_TYPES, MAX_MESSAGE_LENGTH }
