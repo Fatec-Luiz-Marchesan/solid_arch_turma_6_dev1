@@ -1,5 +1,6 @@
 const request = require('supertest')
 const app = require('../../../external/frameworks/app')
+const { BreedMongoRepository } = require('../../../external/repositories/BreedMongoRepository')
 
 describe('Contrato da API de Breed (integração)', () => {
   const validBreed = {
@@ -75,4 +76,18 @@ describe('Contrato da API de Breed (integração)', () => {
     expect(res.body.breeds[0].name).toBe('Labrador')
     expect(res.body.breeds[0].size).toBe('large')
   })
+
+  it('POST /breeds/create deve retornar 500 em caso de erro interno não mapeado', async () => {
+    jest.spyOn(BreedMongoRepository.prototype, 'create').mockRejectedValueOnce(new Error('Erro Genérico DB'))
+
+    const res = await request(app)
+      .post('/breeds/create')
+      .send(validBreed)
+
+    expect(res.status).toBe(500)
+    expect(res.body.message).toBe('Erro interno ao criar raça.')
+
+    jest.restoreAllMocks()
+  })
 })
+
