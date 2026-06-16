@@ -11,6 +11,7 @@ describe('Entidade Vaccine (contratos e precedência de validação)', () => {
     ...overrides,
   })
 
+
   it('deve priorizar o erro de nome quando nome e fabricante faltam', () => {
     expect(() => new Vaccine(makeValidData({ name: undefined, manufacturer: undefined })))
       .toThrow('O nome da vacina é obrigatório!')
@@ -43,7 +44,6 @@ describe('Entidade Vaccine (contratos e precedência de validação)', () => {
     expect(vaccine.requiredDoses).toBe(10)
   })
 
-
   it('deve aceitar vacina sem id (id não é obrigatório)', () => {
     const vaccine = new Vaccine(makeValidData({ id: undefined }))
     expect(vaccine.id).toBeUndefined()
@@ -51,8 +51,8 @@ describe('Entidade Vaccine (contratos e precedência de validação)', () => {
   })
 
 
-  it('deve aceitar intervalDays exatamente no limite inferior válido (0)', () => {
-    const vaccine = new Vaccine(makeValidData({ intervalDays: 0 }))
+  it('deve aceitar intervalDays exatamente no limite inferior válido (0) com dose única', () => {
+    const vaccine = new Vaccine(makeValidData({ requiredDoses: 1, intervalDays: 0 }))
     expect(vaccine.intervalDays).toBe(0)
   })
 

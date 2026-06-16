@@ -16,12 +16,19 @@ class Vaccine {
       throw new Error('O intervalo entre doses não pode ser negativo!')
     }
 
+    const finalIntervalDays = intervalDays || 0
+    if (requiredDoses > 1 && finalIntervalDays <= 0) {
+      throw new Error(
+        'O intervalo entre doses deve ser maior que zero quando há mais de uma dose!'
+      )
+    }
+
     this.id = id
     this.name = name
     this.manufacturer = manufacturer
     this.description = description
     this.requiredDoses = requiredDoses
-    this.intervalDays = intervalDays || 0
+    this.intervalDays = finalIntervalDays
   }
 }
 

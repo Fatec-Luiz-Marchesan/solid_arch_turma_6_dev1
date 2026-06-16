@@ -11,6 +11,7 @@ describe('Entidade Vaccine (cenários complementares)', () => {
     ...overrides,
   })
 
+
   it('deve preservar o id quando informado', () => {
     const vaccine = new Vaccine(makeValidData())
     expect(vaccine.id).toBe('vac-1')
@@ -26,13 +27,14 @@ describe('Entidade Vaccine (cenários complementares)', () => {
     expect(vaccine.description).toBeUndefined()
   })
 
-  it('deve assumir intervalDays = 0 quando não informado', () => {
-    const vaccine = new Vaccine(makeValidData({ intervalDays: undefined }))
+
+  it('deve assumir intervalDays = 0 quando não informado (dose única)', () => {
+    const vaccine = new Vaccine(makeValidData({ requiredDoses: 1, intervalDays: undefined }))
     expect(vaccine.intervalDays).toBe(0)
   })
 
-  it('deve aceitar intervalDays = 0 explicitamente', () => {
-    const vaccine = new Vaccine(makeValidData({ intervalDays: 0 }))
+  it('deve aceitar intervalDays = 0 explicitamente (dose única)', () => {
+    const vaccine = new Vaccine(makeValidData({ requiredDoses: 1, intervalDays: 0 }))
     expect(vaccine.intervalDays).toBe(0)
   })
 
@@ -40,6 +42,7 @@ describe('Entidade Vaccine (cenários complementares)', () => {
     const vaccine = new Vaccine(makeValidData({ intervalDays: 365 }))
     expect(vaccine.intervalDays).toBe(365)
   })
+
 
   it('deve aceitar requiredDoses igual a 1 (mínimo válido)', () => {
     const vaccine = new Vaccine(makeValidData({ requiredDoses: 1 }))
@@ -60,6 +63,7 @@ describe('Entidade Vaccine (cenários complementares)', () => {
     expect(() => new Vaccine(makeValidData({ requiredDoses: undefined })))
       .toThrow('A quantidade de doses deve ser maior que zero!')
   })
+
 
   it('deve criar instâncias independentes', () => {
     const a = new Vaccine(makeValidData({ name: 'Vacina A' }))
