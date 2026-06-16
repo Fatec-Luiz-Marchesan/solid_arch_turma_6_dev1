@@ -10,6 +10,10 @@ class IBreedRepository {
   async findAll() {
     throw new Error('Método findAll não implementado')
   }
+
+  async findAllFiltered(options) {
+    throw new Error ('Método findAllFiltered não implementado')
+  }
 }
 
 module.exports = { IBreedRepository }
