@@ -70,4 +70,22 @@ describe('Contrato da API de Admin (integração)', () => {
     expect(res.status).toBe(201)
     expect(res.body.admin.role).toBe('super-admin')
   })
+
+it('POST /admins/create com name omitido deve retornar 500', async () => {
+    const res = await request(app)
+      .post('/admins/create')
+      .send({ email: 'semnome@admin.com', password: 'password123' })
+
+    expect(res.status).toBe(500)
+    expect(res.body.message).toBe('Erro interno ao criar admin.') 
+  })
+
+  it('POST /admins/create com dados enviados que não forem um objeto deve retornar 400', async () => {
+    const res = await request(app)
+      .post('/admins/create')
+      .send("isso é uma string")
+      .set('Content-Type', 'application/json')
+
+    expect(res.status).toBe(400)
+  })
 })
