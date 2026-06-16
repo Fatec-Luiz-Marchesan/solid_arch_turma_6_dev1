@@ -1,3 +1,4 @@
+const { requiresReview } = require('./helpers/payment-review')
 
 const SUPPORTED_CURRENCIES = ['BRL', 'USD', 'EUR']
 const VALID_STATUSES = ['pending', 'paid', 'failed', 'refunded']
@@ -24,6 +25,7 @@ class Payment {
     this.amount = amount
     this.currency = currency
     this.status = status || 'pending'
+    this.requiresReview = requiresReview({amount, currency})
   }
 }
 

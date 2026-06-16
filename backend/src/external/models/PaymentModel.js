@@ -24,6 +24,10 @@ const PaymentModel = mongoose.model(
         enum: ['pending', 'paid', 'failed', 'refunded'],
         default: 'pending',
       },
+      requiresReview: {
+        type: Boolean,
+        default: false,
+      },
     },
     { timestamps: true }
   )
