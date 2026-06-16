@@ -1,0 +1,102 @@
+openapi: 3.0.3
+info:
+  title: API de Adoption
+  version: 1.0.0
+  description: Fluxo de solicitação e decisão de adoção de pets.
+servers:
+  - url: http://localhost:5000
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Adoption:
+      type: object
+      properties:
+        id:
+          type: string
+        pet:
+          type: string
+        requester:
+          type: string
+        owner:
+          type: string
+        status:
+          type: string
+          enum: [pending, approved, rejected, cancelled]
+        message:
+          type: string
+security:
+  - bearerAuth: []
+paths:
+  /adoptions/request:
+    post:
+      summary: Solicita a adoção de um pet
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [petId]
+              properties:
+                petId:
+                  type: string
+                message:
+                  type: string
+      responses:
+        '201':
+          description: Solicitação registrada
+        '401':
+          description: Token ausente
+        '404':
+          description: Pet não encontrado
+        '422':
+          description: Regra de negócio violada
+  /adoptions/{id}/decision:
+    patch:
+      summary: Aprova ou rejeita uma adoção (apenas o dono)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decision]
+              properties:
+                decision:
+                  type: string
+                  enum: [approved, rejected]
+      responses:
+        '200':
+          description: Decisão registrada
+        '401':
+          description: Token ausente
+        '403':
+          description: Não é o dono do pet
+        '404':
+          description: Adoção não encontrada
+        '422':
+          description: Decisão inválida ou adoção finalizada
+  /adoptions/mine:
+    get:
+      summary: Lista as adoções solicitadas pelo usuário autenticado
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de adoções
+        '401':
+          description: Token ausente

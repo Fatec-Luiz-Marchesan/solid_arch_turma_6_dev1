@@ -1,0 +1,54 @@
+{
+  "info": {
+    "name": "Adoption API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "token", "value": "" },
+    { "key": "petId", "value": "" },
+    { "key": "adoptionId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Solicitar adoção",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/adoptions/request",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"petId\": \"{{petId}}\",\n  \"message\": \"Tenho quintal grande e amo animais.\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Decidir adoção (dono)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": "{{baseUrl}}/adoptions/{{adoptionId}}/decision",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"decision\": \"approved\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Minhas adoções",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/adoptions/mine"
+      }
+    }
+  ]
+}
