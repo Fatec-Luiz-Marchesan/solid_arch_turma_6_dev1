@@ -88,4 +88,19 @@ it('POST /admins/create com name omitido deve retornar 500', async () => {
 
     expect(res.status).toBe(400)
   })
+
+
+it('GET /admins não deve expor a senha dos administradores', async () => {
+    await request(app).post('/admins/create').send({
+      name: 'Admin Teste',
+      email: `seguranca_${Date.now()}@teste.com`,
+      password: 'password123'
+    })
+    
+    const res = await request(app).get('/admins')
+
+    res.body.admins.forEach(admin => {
+      expect(admin).not.toHaveProperty('password')
+    })
+  })
 })
