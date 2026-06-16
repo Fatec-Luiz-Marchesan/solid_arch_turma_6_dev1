@@ -1,6 +1,7 @@
 const request = require('supertest')
 const app = require('../../../external/frameworks/app')
 const { makeAuthToken, makeUserPayload } = require('./helpers/test-factory')
+const { ProfileMongoRepository } = require('../../../external/repositories/ProfileMongoRepository')
 
 describe('Contrato POST /v2/users/profile (integração)', () => {
   async function createUserAndToken() {
@@ -74,5 +75,21 @@ describe('Contrato POST /v2/users/profile (integração)', () => {
 
     expect(res.status).toBe(422)
     expect(res.body.message).toBe('O telefone deve ter no mínimo 10 dígitos!')
+  })
+
+  it('deve retornar 500 em caso de erro interno não mapeado no banco', async () => {
+    const { userId, token } = await createUserAndToken()
+
+    jest.spyOn(ProfileMongoRepository.prototype, 'create').mockRejectedValueOnce(new Error('Erro Crítico DB'))
+
+    const res = await request(app)
+      .post('/v2/users/profile')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ user: userId, bio: 'Tentando salvar', phone: '11999999999' })
+
+    expect(res.status).toBe(500)
+    expect(res.body.message).toBe('Erro interno ao criar profile.')
+
+    jest.restoreAllMocks()
   })
 })
