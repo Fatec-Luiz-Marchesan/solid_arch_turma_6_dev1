@@ -1,3 +1,5 @@
+const { requiresVetApproval } = require('./helpers/diet-approval')
+
 const VALID_TYPES = ['weight-loss', 'maintenance', 'weight-gain', 'medical']
 
 class Diet {
@@ -31,6 +33,7 @@ class Diet {
     this.dailyCalories = dailyCalories
     this.type = type || 'maintenance'
     this.mealsPerDay = finalMeals
+    this.requiresVetApproval = requiresVetApproval({type: this.type, dailyCalories})
   }
 }
 
