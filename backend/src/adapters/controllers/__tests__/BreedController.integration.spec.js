@@ -89,5 +89,16 @@ describe('Contrato da API de Breed (integração)', () => {
 
     jest.restoreAllMocks()
   })
+
+  it('GET /breeds deve retornar 500 em caso de erro interno na busca', async () => {
+    jest.spyOn(BreedMongoRepository.prototype,'findAll').mockRejectedValueOnce(new Error('Erro Genérico DB'))
+
+    const res = await request(app).get('/breeds')
+
+    expect(res.status).toBe(500)
+    expect(res.body.message).toBe('Erro interno ao listar raças.')
+
+    jest.restoreAllMocks()
+  })
 })
 
