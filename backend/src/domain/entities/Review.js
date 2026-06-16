@@ -1,3 +1,5 @@
+const {sanitizeText, assertMaxLength, LIMITS} = require('./helpers/review-input')
+
 const MIN_RATING = 1
 const MAX_RATING = 5
 
@@ -12,9 +14,11 @@ class Review {
     if (rating < MIN_RATING || rating > MAX_RATING) {
       throw new Error('A nota deve estar entre 1 e 5!')
     }
+    comment = sanitizeText(comment)
     if (!comment) {
       throw new Error('O comentário da avaliação é obrigatório!')
     }
+    assertMaxLength(comment, LIMITS.COMMENT_MAX, 'comentário')
     if (!petId) {
       throw new Error('O pet avaliado é obrigatório!')
     }
