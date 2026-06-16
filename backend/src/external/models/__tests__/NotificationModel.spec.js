@@ -46,5 +46,23 @@ describe('NotificationModel (Schema)', () => {
     })
     const err = notification.validateSync()
     expect(err.errors.priority).toBeDefined()
-  })  
+  })
+
+  it('deve aceitar uma message dentro do limite de tamanho', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'A'.repeat(500),
+    })
+    const err = notification.validateSync()
+    expect(err).toBeUndefined()
+  })
+
+  it('deve falhar se a message exceder o tamanho máximo', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'A'.repeat(501),
+    })
+    const err = notification.validateSync()
+    expect(err.errors.message).toBeDefined()
+  })
 })

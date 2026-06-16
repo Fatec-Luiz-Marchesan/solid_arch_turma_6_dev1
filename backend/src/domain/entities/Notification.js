@@ -1,4 +1,5 @@
 const VALID_PRIORITIES = ['low', 'normal', 'high']
+const MAX_MESSAGE_LENGTH = 500
 
 class Notification {
     constructor({ recipientId, message, priority, read, expiresAt }) {
@@ -7,6 +8,9 @@ class Notification {
         }
         if (!message) {
             throw new Error('A mensagem da notificação é obrigatória!')
+        }
+        if (message.length > MAX_MESSAGE_LENGTH) {
+            throw new Error('A mensagem da notificação é muito longa!')
         }
 
         const finalPriority = priority || 'normal'
@@ -34,4 +38,4 @@ class Notification {
     }
 }
 
-module.exports = { Notification, VALID_PRIORITIES }
+module.exports = { Notification, VALID_PRIORITIES, MAX_MESSAGE_LENGTH }
