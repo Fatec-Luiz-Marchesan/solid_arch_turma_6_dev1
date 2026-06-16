@@ -11,6 +11,9 @@ const ERROR_STATUS_MAP = {
 module.exports = class ProfileController {
   static async create(req, res) {
     const { user, bio, phone } = req.body
+    if (phone && phone.length < 10) {
+      return res.status(422).json({ message: 'O telefone deve ter no mínimo 10 dígitos!'})
+    }
     const repository = new ProfileMongoRepository()
     const createProfile = new CreateProfile(repository)
 
