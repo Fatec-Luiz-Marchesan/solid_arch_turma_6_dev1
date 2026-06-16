@@ -25,6 +25,44 @@ class DietMongoRepository extends IDietRepository {
       mealsPerDay: doc.mealsPerDay,
     }))
   }
+
+  async findById(id) {
+    const doc = await DietModel.findById(id)
+    if (!doc) {
+      return null
+    }
+    return this._toDTO(doc)
+  }
+
+  async update(id, data) {
+    const doc = await DietModel.findByIdAndUpdate(id, data, {
+      new: true,
+      runValidators: true,
+    })
+    if (!doc) {
+      return null
+    }
+    return this._toDTO(doc)
+  }
+
+  async delete(id) {
+    const doc = await DietModel.findByIdAndDelete(id)
+    if (!doc) {
+      return null
+    }
+    return this._toDTO(doc)
+  }
+
+  _toDTO(doc) {
+    return {
+      id: doc._id.toString(),
+      name: doc.name,
+      pet: doc.pet,
+      dailyCalories: doc.dailyCalories,
+      type: doc.type,
+      mealsPerDay: doc.mealsPerDay,
+    }
+  }
 }
 
 module.exports = { DietMongoRepository }
