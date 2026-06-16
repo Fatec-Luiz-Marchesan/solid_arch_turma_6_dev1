@@ -6,7 +6,7 @@ describe('Contrato da API de Breed (integração)', () => {
     name: 'Labrador',
     species: 'dog',
     description: 'Cão dócil e brincalhão',
-    size: 'large',
+    size: 'large', 
   }
 
   it('POST /breeds/create deve criar uma raça e retornar 201', async () => {
@@ -16,7 +16,7 @@ describe('Contrato da API de Breed (integração)', () => {
     expect(res.body).toHaveProperty('breed')
     expect(res.body.breed.name).toBe('Labrador')
     expect(res.body.breed.species).toBe('dog')
-    expect(res.body.breed.size).toBe('large')
+    expect(res.body.breed.size).toBe('large') 
     expect(res.body.breed).toHaveProperty('id')
   })
 
@@ -64,7 +64,7 @@ describe('Contrato da API de Breed (integração)', () => {
     expect(res.body.message).toBe('Já existe uma raça com este nome!')
   })
 
-  it('GET /breeds deve retornar 200 e a lista de raças', async () => {
+  it('GET /breeds deve retornar 200, a lista de raças e dados de paginação', async () => {
     await request(app).post('/breeds/create').send(validBreed)
     const res = await request(app).get('/breeds')
 
@@ -73,6 +73,35 @@ describe('Contrato da API de Breed (integração)', () => {
     expect(Array.isArray(res.body.breeds)).toBe(true)
     expect(res.body.breeds).toHaveLength(1)
     expect(res.body.breeds[0].name).toBe('Labrador')
-    expect(res.body.breeds[0].size).toBe('large')
+    expect(res.body.breeds[0].size).toBe('large') 
+    expect(res.body).toHaveProperty('pagination')
+    expect(res.body.pagination.total).toBe(1)
+  })
+
+  it('GET /breeds?species=cat deve filtrar por espécie', async () => {
+    await request(app).post('/breeds/create').send(validBreed)
+    await request(app)
+      .post('/breeds/create')
+      .send({ name: 'Siamês', species: 'cat', description: 'Gato elegante' })
+
+    const res = await request(app).get('/breeds?species=cat')
+
+    expect(res.status).toBe(200)
+    expect(res.body.breeds).toHaveLength(1)
+    expect(res.body.breeds[0].species).toBe('cat')
+  })
+
+  it('GET /breeds com espécie inválida deve retornar 422', async () => {
+    const res = await request(app).get('/breeds?species=dinossauro')
+
+    expect(res.status).toBe(422)
+    expect(res.body.message).toBe('Espécie inválida!')
+  })
+
+  it('GET /breeds com page inválido deve retornar 422', async () => {
+    const res = await request(app).get('/breeds?page=0')
+
+    expect(res.status).toBe(422)
+    expect(res.body.message).toBe('Parâmetro page inválido!')
   })
 })
