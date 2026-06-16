@@ -27,4 +27,19 @@ describe('Entidade Event (regras de domínio)', () => {
     expect(() => new Event(makeValidData({ status: 'pizza' }), now))
       .toThrow('Status de evento inválido!')
   })
+
+  it('deve nascer com category "other" por padrão', () => {
+    const event = new Event(makeValidData(), now)
+    expect(event.category).toBe('other')
+  })
+
+  it('deve aceitar uma category válida do enum', () => {
+    const event = new Event(makeValidData({ category: 'workshop' }), now)
+    expect(event.category).toBe('workshop')
+  })
+
+  it('deve lançar erro para uma category fora do enum permitido', () => {
+    expect(() => new Event(makeValidData({ category: 'festa-junina' }), now))
+      .toThrow('Categoria de evento inválida!')
+  })
 })

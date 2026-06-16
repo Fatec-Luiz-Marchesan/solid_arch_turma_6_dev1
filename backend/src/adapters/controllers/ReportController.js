@@ -1,16 +1,21 @@
-const { CreateReport } = require('../../use-cases/CreateReport')
-const { ReportMongoRepository } = require('../../external/repositories/ReportMongoRepository')
+const { ReportValidator } = require('../validators/ReportValidator')
 
-module.exports = class ReportController {
- 
-  static async create(req, res) {
+class ReportController {
+  constructor(createReport, listReports) {
+    this.createReport = createReport
+    this.listReports = listReports
+  }
+
+  async create(req, res) {
+    const schemaError = ReportValidator.validateCreate(req.body)
+    if (schemaError) {
+      return res.status(422).json({ message: schemaError })
+    }
+
     const { title, description, type, reporterId } = req.body
 
-    const reportRepository = new ReportMongoRepository()
-    const createReport = new CreateReport(reportRepository)
-
     try {
-      const report = await createReport.execute({ title, description, type, reporterId })
+      const report = await this.createReport.execute({ title, description, type, reporterId })
       return res.status(201).json({
         message: 'Report criado com sucesso!',
         report,
@@ -20,13 +25,14 @@ module.exports = class ReportController {
     }
   }
 
-  static async getAll(req, res) {
-    const reportRepository = new ReportMongoRepository()
+  async getAll(req, res) {
     try {
-      const reports = await reportRepository.findAll()
+      const reports = await this.listReports.execute()
       return res.status(200).json({ reports })
     } catch (error) {
       return res.status(500).json({ message: 'Erro interno ao listar reports.' })
     }
   }
 }
+
+module.exports = { ReportController }

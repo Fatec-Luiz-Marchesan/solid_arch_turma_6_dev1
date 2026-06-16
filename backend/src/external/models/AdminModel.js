@@ -20,6 +20,10 @@ const AdminModel = mongoose.model(
       },
       role: {
         type: String,
+        enum: {
+          values: ['admin', 'super-admin', 'moderator'],
+          message: 'Papel de admin inválido!',
+        },
         default: 'admin',
       },
     },

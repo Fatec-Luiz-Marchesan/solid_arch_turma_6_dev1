@@ -51,3 +51,46 @@ describe('Entidade Notification (regras de negócio)', () => {
             .toThrow('Não é possível ler uma notificação expirada!')
     })
 })
+describe('Notification (limite de tamanho da mensagem - #67)', () => {
+  const makeValid = (overrides = {}) => ({
+    recipientId: 'user-1',
+    message: 'Seu pet foi adotado!',
+    ...overrides,
+  })
+
+  it('deve aceitar uma mensagem dentro do limite (500)', () => {
+    const { Notification } = require('../Notification')
+    const n = new Notification(makeValid({ message: 'A'.repeat(500) }))
+    expect(n.message.length).toBe(500)
+  })
+
+  it('deve lançar erro para mensagem acima do limite (501)', () => {
+    const { Notification } = require('../Notification')
+    expect(() => new Notification(makeValid({ message: 'A'.repeat(501) })))
+      .toThrow('A mensagem da notificação é muito longa!')
+  })
+})
+
+describe('Notification (tipo de notificação - #86)', () => {
+  const { Notification } = require('../Notification')
+  const makeValid = (overrides = {}) => ({
+    recipientId: 'user-1',
+    message: 'Seu pet foi adotado!',
+    ...overrides,
+  })
+
+  it('deve assumir type "system" por padrão', () => {
+    const n = new Notification(makeValid())
+    expect(n.type).toBe('system')
+  })
+
+  it('deve aceitar um type válido do enum', () => {
+    const n = new Notification(makeValid({ type: 'alert' }))
+    expect(n.type).toBe('alert')
+  })
+
+  it('deve lançar erro para um type fora do enum', () => {
+    expect(() => new Notification(makeValid({ type: 'spam' })))
+      .toThrow('Tipo de notificação inválido!')
+  })
+})

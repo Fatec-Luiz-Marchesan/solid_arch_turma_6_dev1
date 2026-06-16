@@ -1,0 +1,97 @@
+const NotificationModel = require('../NotificationModel')
+
+describe('NotificationModel (Schema)', () => {
+  it('deve ter os campos obrigatórios recipientId e message', () => {
+    const notification = new NotificationModel({})
+    const err = notification.validateSync()
+
+    expect(err.errors.recipientId).toBeDefined()
+    expect(err.errors.message).toBeDefined()
+  })
+
+  it('deve aplicar read=false por padrão', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'Olá!',
+    })
+
+    expect(notification.read).toBe(false)
+  })
+
+  it('não deve apresentar erro de validação quando recipientId e message são informados', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'Olá!',
+    })
+    const err = notification.validateSync()
+
+    expect(err).toBeUndefined()
+  })
+
+  it('deve aceitar prioridade high', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'Urgente!',
+      priority: 'high',
+    })
+    const err = notification.validateSync()
+    expect(err).toBeUndefined()
+  })
+
+  it('deve falhar se a prioridade for inválida', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'Erro de prioridade',
+      priority: 'invalida',
+    })
+    const err = notification.validateSync()
+    expect(err.errors.priority).toBeDefined()
+  })
+
+  it('deve aceitar uma message dentro do limite de tamanho', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'A'.repeat(500),
+    })
+    const err = notification.validateSync()
+    expect(err).toBeUndefined()
+  })
+
+  it('deve falhar se a message exceder o tamanho máximo', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'A'.repeat(501),
+    })
+    const err = notification.validateSync()
+    expect(err.errors.message).toBeDefined()
+  })
+
+  it('deve assumir type "system" por padrão', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'Olá!',
+    })
+    expect(notification.type).toBe('system')
+  })
+
+  it('deve aceitar um type válido do enum', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'Promoção!',
+      type: 'promo',
+    })
+    const err = notification.validateSync()
+    expect(err).toBeUndefined()
+    expect(notification.type).toBe('promo')
+  })
+
+  it('deve falhar se o type for inválido', () => {
+    const notification = new NotificationModel({
+      recipientId: 'user-id',
+      message: 'Tipo errado',
+      type: 'spam',
+    })
+    const err = notification.validateSync()
+    expect(err.errors.type).toBeDefined()
+  })
+})

@@ -1,15 +1,15 @@
 class Event {
-  constructor({ title, startsAt, endsAt, organizerId, location, capacity, status }, now = new Date()) {
+  constructor({ title, startsAt, endsAt, organizerId, location, capacity, status, category }, now = new Date()) {
     if (!title) {
       throw new Error('O título do evento é obrigatório!')
     }
     if (!organizerId) {
       throw new Error('O organizador do evento é obrigatório!')
     }
- 
+
     const start = new Date(startsAt)
     const end = new Date(endsAt)
- 
+
     if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
       throw new Error('Datas do evento inválidas!')
     }
@@ -19,18 +19,24 @@ class Event {
     if (end.getTime() <= start.getTime()) {
       throw new Error('A data de término deve ser posterior à de início!')
     }
- 
+
     const finalCapacity = capacity === undefined ? 1 : capacity
     if (finalCapacity < 1) {
       throw new Error('A capacidade mínima do evento é 1!')
     }
- 
+
     const allowedStatus = ['scheduled', 'cancelled', 'finished']
     const finalStatus = status === undefined ? 'scheduled' : status
     if (!allowedStatus.includes(finalStatus)) {
       throw new Error('Status de evento inválido!')
     }
- 
+
+    const allowedCategories = ['workshop', 'meetup', 'conference', 'other']
+    const finalCategory = category === undefined ? 'other' : category
+    if (!allowedCategories.includes(finalCategory)) {
+      throw new Error('Categoria de evento inválida!')
+    }
+
     this.title = title
     this.startsAt = start
     this.endsAt = end
@@ -38,7 +44,8 @@ class Event {
     this.location = location || ''
     this.capacity = finalCapacity
     this.status = finalStatus
+    this.category = finalCategory
   }
 }
- 
+
 module.exports = { Event }

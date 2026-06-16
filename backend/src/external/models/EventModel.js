@@ -38,6 +38,14 @@ const EventModel = mongoose.model(
         },
         default: 'scheduled',
       },
+      category: {
+        type: String,
+        enum: {
+          values: ['workshop', 'meetup', 'conference', 'other'],
+          message: 'Categoria de evento inválida!',
+        },
+        default: 'other',
+      },
     },
     { timestamps: true }
   )

@@ -23,6 +23,11 @@ const ReportModel = mongoose.model(
         enum: ['open', 'in_review', 'closed'],
         default: 'open',
       },
+      priority: {
+        type: String,
+        enum: ['low', 'medium', 'high'],
+        default: 'low',
+      },
       reporterId: {
         type: String,
         required: true,
