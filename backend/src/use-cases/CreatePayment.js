@@ -1,4 +1,5 @@
 
+const { requiresReview } = require('../domain/entities/helpers/payment-review')
 const { Payment } = require('../domain/entities/Payment')
 
 class CreatePayment {
@@ -16,6 +17,7 @@ class CreatePayment {
       amount: payment.amount,
       currency: payment.currency,
       status: payment.status,
+      requiresReview: payment.requiresReview,
     })
 
     return created
