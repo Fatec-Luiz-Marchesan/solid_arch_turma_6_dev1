@@ -103,4 +103,26 @@ it('GET /admins não deve expor a senha dos administradores', async () => {
       expect(admin).not.toHaveProperty('password')
     })
   })
+
+it('POST /admins/create seguido de GET /admins deve persistir o admin no banco', async () => {
+    const newAdmin = {
+      name: 'Admin Persistente',
+      email: `persistente_${Date.now()}@teste.com`,
+      password: 'password123',
+      role: 'admin'
+    }
+
+    await request(app).post('/admins/create').send(newAdmin)
+
+    const res = await request(app).get('/admins')
+
+    const adminList = res.body.admins || res.body; 
+    
+    const adminFound = Array.isArray(adminList) 
+      ? adminList.find(a => a.email === newAdmin.email)
+      : null;
+    
+    expect(adminFound).toBeDefined()
+    expect(adminFound.name).toBe('Admin Persistente')
+  })
 })
