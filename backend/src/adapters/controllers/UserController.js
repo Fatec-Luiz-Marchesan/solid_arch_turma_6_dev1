@@ -8,6 +8,10 @@ module.exports = class UserController {
   static async register(req, res) {
     const { name, email, phone, password, confirmpassword } = req.body
 
+    if (password && password.length < 6) {
+      return res.status(422).json({ message: 'A senha deve ter no mínimo 6 caracteres!'})
+    }
+
     // Composição das dependências (Composition Root)
     const userRepository = new UserMongoRepository()
     const hasher = new BcryptHasher()

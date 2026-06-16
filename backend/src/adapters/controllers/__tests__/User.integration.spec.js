@@ -37,6 +37,15 @@ const app = require('../../../external/frameworks/app')
             expect(res.body.message).toBe('A senha e a confirmação precisam ser iguais!')
         })
 
+        it('POST /v2/users/register com senha menor que 6 caracteres deve retornar 422', async () => {
+            const res = await request(app)
+                .post('/v2/users/register')
+                .send({ ...validUser, password: '123', confirmpassword: '123' })
+            
+            expect(res.status).toBe(422)
+            expect(res.body.message).toBe('A senha deve ter no mínimo 6 caracteres!')
+        })
+
         it('POST /v2/users/register com email duplicado deve retornar 422', async () => {
             await request(app).post('/v2/users/register').send(validUser)
             const res = await request(app).post('/v2/users/register').send(validUser)
